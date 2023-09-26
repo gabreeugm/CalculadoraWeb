@@ -10,7 +10,7 @@ Funcionalidade abrangente de calculadora.
 Interface amigável e responsiva.
 Controle de casas decimais no resultado.
 Desenvolvido com HTML, CSS e JavaScript.
-🌐 Você pode experimentar a calculadora online [Inserir link para a calculadora] e explorar seu funcionamento. Sinta-se à vontade para fornecer feedback ou fazer melhorias por meio de pull requests.
+🌐 Você pode experimentar a calculadora online e explorar seu funcionamento. Sinta-se à vontade para fornecer feedback ou fazer melhorias por meio de pull requests.
 
 Este projeto representa meu compromisso com a aprendizagem contínua e meu entusiasmo por criar soluções úteis. Agradeço a todos que me apoiaram nesta jornada!
 
