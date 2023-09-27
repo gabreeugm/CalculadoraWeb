@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <title>Calculadora</title>
+
+    <style>
+        /* Estilos CSS */
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .fundo {
+            background-image: linear-gradient(60deg, #1E1E1E, #F40009);
+            height: 100vh;
+            color: white;
+            font-family: Verdana;
+            text-align: center;
+        }
+
+        .calculadora {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.4);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .botao {
+            width: 50px;
+            height: 50px;
+            font-size: 25px;
+            cursor: pointer;
+            background-color: rgb(61, 57, 57);
+            border: none;
+            color: white;
+            margin: 2px;
+        }
+
+        .botao_igual {
+            width: 50px;
+            height: 50px;
+            font-size: 25px;
+            cursor: pointer;
+            background-color: #F40009;
+            border: none;
+            color: white;
+            margin: 2px;
+        }
+
+        .botao:hover {
+            background-color: #1E1E1E;
+        }
+
+        #visor {
+            width: 207px;
+            background-color: white;
+            height: 30px;
+            margin: 5px;
+            font-size: 25px;
+            color: #1E1E1E;
+            text-align: right;
+            padding: 5px;
+        }
+
+        #historico {
+            display: none;
+            /* Inicialmente oculto */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fundo">
+        <h1>Gabriel Gama</h1>
+        <h1>Versão 1.0v</h1>
+
+        <!-- Botão para mostrar o histórico -->
+        <button class="botao" onclick="mostrarHistorico()">
+            <i class="material-icons">history</i>
+        </button>
+        <!-- Div do histórico -->
+        <div id="historico">
+            <!-- O histórico será exibido aqui -->
+        </div>
+
+        <div class="calculadora">
+            <h1>Calculadora</h1>
+            <input id="visor" type="text" readonly>
+
+            <!-- Tabela de botões da calculadora -->
+            <!-- Cada botão chama uma função JavaScript correspondente ao ser clicado -->
+            <table>
+                <tr>
+                    <td><button class="botao" onclick="limpar()">C</button></td>
+                    <td><button class="botao" onclick="apagar()">
+                            < </button>
+                    </td>
+                    <td><button class="botao" onclick="insert('/')">÷</button></td>
+                    <td><button class="botao" onclick="insert('*')">x</button></td>
+                </tr>
+                <tr>
+                    <td><button class="botao" onclick="insert(7)">7</button></td>
+                    <td><button class="botao" onclick="insert(8)">8</button></td>
+                    <td><button class="botao" onclick="insert(9)">9</button></td>
+                    <td><button class="botao" onclick="insert('-')">-</button></td>
+                </tr>
+                <tr>
+                    <td><button class="botao" onclick="insert(4)">4</button></td>
+                    <td><button class="botao" onclick="insert(5)">5</button></td>
+                    <td><button class="botao" onclick="insert(6)">6</button></td>
+                    <td><button class="botao" onclick="insert('+')">+</button></td>
+                </tr>
+                <tr>
+                    <td><button class="botao" onclick="insert(1)">1</button></td>
+                    <td><button class="botao" onclick="insert(2)">2</button></td>
+                    <td><button class="botao" onclick="insert(3)">3</button></td>
+                    <td rowspan="2"><button class="botao_igual" style="height: 106px;" onclick="calcular()">=</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button class="botao" style="width : 106px;" onclick="insert(0)">0</button></td>
+                    <td><button class="botao" onclick="insert('.')">.</button></td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+
+    //Variável que armazenará o histórico
+    var historicoResultados = [];
+
+    // Obtém a referência para o campo de entrada e os botões da calculadora
+    var visor = document.getElementById('visor');
+
+    // Função para mostrar ou ocultar o histórico ao clicar no botão "Mostrar Histórico"
+    function mostrarHistorico() {
+        exibirHistorico();
+    }
+
+
+    // Função para exibir ou ocultar o histórico
+    function exibirHistorico() {
+        var historicoContainer = document.getElementById('historico');
+        if (historicoContainer.style.display === 'none' || historicoContainer.style.display === '') {
+            // Se o histórico estiver oculto, exiba-o e preencha com os resultados
+            historicoContainer.style.display = 'block';
+            historicoContainer.innerHTML = '';
+
+            for (var i = 0; i < historicoResultados.length; i++) {
+                var resultadoItem = document.createElement('div');
+                resultadoItem.innerHTML = historicoResultados[i];
+                historicoContainer.appendChild(resultadoItem);
+            }
+        } else {
+            // Se o histórico estiver visível, oculte-o
+            historicoContainer.style.display = 'none';
+        }
+    }
+
+
+    // Adiciona um ouvinte de eventos de teclado ao documento
+    document.addEventListener('keydown', function (event) {
+        // Obtém o valor da tecla pressionada
+        var key = event.key;
+
+        // Verifica a tecla pressionada e realiza a ação apropriada
+        switch (key) {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '.':
+                // Insere a tecla no visor
+                visor.value += key;
+                break;
+            case 'Enter':
+                // Evita o comportamento padrão da tecla Enter (submeter formulário)
+                event.preventDefault();
+                calcular();
+                break;
+            case 'Backspace':
+                // Apaga o último caractere quando a tecla Backspace é pressionada
+                apagar();
+                break;
+            case 'Escape':
+                // Limpa o visor quando a tecla Escape é pressionada
+                limpar();
+                break;
+            default:
+                // Ignora outras teclas
+                break;
+        }
+    });
+
+    // Função para inserir números e operadores no visor da calculadora
+    function insert(input) {
+        // Verificar se o visor está vazio
+        if (visor.value === "0" || visor.value === "") {
+            visor.value = input;
+        } else {
+            visor.value += input;
+        }
+    }
+
+    // Função para limpar o visor da calculadora
+    function limpar() {
+        visor.value = "0";
+    }
+
+    // Função para apagar o último caractere no visor da calculadora
+    function apagar() {
+        var valorAtual = visor.value;
+        visor.value = valorAtual.slice(0, -1);
+    }
+
+    // Função para calcular o resultado da expressão 
+    function calcular() {
+        var resultado = visor.value;
+        if (resultado) {
+            var resultadoNumerico = eval(resultado);
+
+            // Adiciona o resultado atual a memória
+            historicoResultados.push(resultadoNumerico);
+
+            // Exibe o resultado no visor
+            visor.value = resultadoNumerico;
+        } else {
+            visor.value = "0";
+        }
+        // Chame a função exibirHistorico() para atualizar o histórico
+        exibirHistorico();
+    }
+
+</script>
+
+</html>
